@@ -2,6 +2,29 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const requiredEnvVars = [
+  "DATABASE_URL",
+  "JWT_SECRET",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+] as const;
+
+const missingEnvVars = requiredEnvVars.filter((key) => !process.env[key]);
+
+if (missingEnvVars.length > 0) {
+  console.error("❌ CRITICAL: Missing environment variables:");
+  missingEnvVars.forEach((key) => {
+    console.error(`   - ${key}`);
+  });
+  console.error(
+    "\nPlease set these in your Render Dashboard (Environment tab).",
+  );
+  process.exit(1);
+}
+
 export const env = {
   PORT: process.env.PORT || 5000,
 
